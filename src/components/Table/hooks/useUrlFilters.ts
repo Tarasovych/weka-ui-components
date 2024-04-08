@@ -4,14 +4,10 @@ import { Utils } from '../../..'
 import { SAVED_FILTERS } from '../../../consts'
 import localStorageService from '../../../localStorageService'
 import useStaticProps from '../../../hooks/useStaticProps'
-import { stringParser } from '../Table'
+import { ExtendedColumnFilter, UrlFilterParser } from '../types'
+import { urlFilterParsers } from '../tableUtils'
 
-export interface UrlFilterParser {
-  (rawValue: string[] | Record<string, string[]>):
-    | ExtendedFilter['value']
-    | null
-    | void
-}
+const defaultFilterParser = urlFilterParsers.string
 
 function useUrlFilters(props: {
   enabled?: boolean
@@ -24,52 +20,49 @@ function useUrlFilters(props: {
   }[]
   filterCategory: string
 }): [
-  ExtendedFilter[],
+  ExtendedColumnFilter[],
   (
     filters:
-      | ExtendedFilter[]
-      | ((prevState: ExtendedFilter[]) => ExtendedFilter[])
+      | ExtendedColumnFilter[]
+      | ((prevState: ExtendedColumnFilter[]) => ExtendedColumnFilter[])
   ) => void
 ] {
   const { enabled = true, filterConfig, filterCategory } = props
   const staticProps = useStaticProps({ filterConfig })
 
-  const getLocalStorageFilters = (): Record<
-    ExtendedFilter['id'],
-    ExtendedFilter['value']
-  > => {
+  const getLocalStorageFilters = (): Record<string, unknown> => {
     const LSFilters = localStorageService.getItem(SAVED_FILTERS)
     return (LSFilters && JSON.parse(LSFilters)[filterCategory]) || {}
   }
 
   const navigate = useNavigate()
 
-  const [filters, setFilters] = useState<ExtendedFilter[]>(
-    (): ExtendedFilter[] => {
-      if (!enabled) {
-        return []
-      }
+  const [filters, setFilters] = useState<ExtendedColumnFilter[]>(() => {
+    if (!enabled) {
+      return []
+    }
 
-      if (window.location.search) {
-        const searchParams = new URLSearchParams(window.location.search)
-        const parsedSearchParams = Utils.parseSearchParamsToObject(searchParams)
+    if (window.location.search) {
+      const searchParams = new URLSearchParams(window.location.search)
+      const parsedSearchParams = Utils.parseSearchParamsToObject(searchParams)
 
-        return filterConfig.flatMap(({ id, filterParser = stringParser }) => {
+      return filterConfig.flatMap(
+        ({ id, filterParser = defaultFilterParser }) => {
           const parsedValue = filterParser(parsedSearchParams[id])
           return parsedValue ? { id: id, value: parsedValue } : []
-        })
-      }
-
-      const parsedLSFilters = getLocalStorageFilters()
-
-      const filtersArr = filterConfig.flatMap(({ id }) => {
-        const parsedValue = parsedLSFilters[id]
-        return parsedValue ? { id: id, value: parsedValue } : []
-      })
-
-      return filtersArr
+        }
+      )
     }
-  )
+
+    const parsedLSFilters = getLocalStorageFilters()
+
+    const filtersArr = filterConfig.flatMap(({ id }) => {
+      const parsedValue = parsedLSFilters[id]
+      return parsedValue ? { id: id, value: parsedValue } : []
+    })
+
+    return filtersArr
+  })
 
   const handleFiltersChange = useCallback(() => {
     const searchParams = new URLSearchParams(window.location.search)
@@ -107,11 +100,27 @@ function useUrlFilters(props: {
         })
       } else if (Utils.isObject(value)) {
         Object.entries(value).forEach(([innerKey, innerVal]) => {
+          if (
+            typeof innerVal !== 'string' &&
+            typeof innerVal !== 'number' &&
+            typeof innerVal !== 'boolean'
+          ) {
+            throw new Error('Invalid filter value. Expected string or number.')
+          }
+
           if (!Utils.isEmpty(innerVal)) {
             searchParams.append(`${id}[${innerKey}]`, innerVal.toString())
           }
         })
       } else if (!Utils.isEmpty(value)) {
+        if (
+          typeof value !== 'string' &&
+          typeof value !== 'number' &&
+          typeof value !== 'boolean'
+        ) {
+          throw new Error('Invalid filter value. Expected string or number.')
+        }
+
         searchParams.append(id, value.toString())
       }
     })
