@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { ColumnFilter } from '@tanstack/react-table';
+import { ColumnFilter, FilterFn } from '@tanstack/react-table';
 import { ExtendedColumnFilter, ExtendedColumnDef, RowAction, TableExtraClasses, ExtendedRow } from './types';
 import './table.scss';
 interface TableProps<Data, Value> {
@@ -12,7 +12,8 @@ interface TableProps<Data, Value> {
     emptyMessage?: string;
     tableActions?: Array<ReactNode>;
     defaultSort?: string;
-    globalFilter?: string | ((rows: ExtendedRow<Data>[]) => ExtendedRow<Data>[]);
+    globalFilter?: any;
+    globalFilterFn?: FilterFn<Data>;
     defaultGlobalFilter?: string;
     checkRowSelected?: (row: object) => boolean;
     checkRowHighlighted?: (row: object) => boolean;
@@ -44,7 +45,7 @@ interface TableProps<Data, Value> {
     hasResizableColumns?: boolean;
     hasEmptyActionsCell?: boolean;
     collapseRowsOnLeavingPage?: boolean;
-    onSortingChange: (sort: {
+    onSortingChange?: (sort: {
         id: string;
         desc?: boolean;
     }) => void;

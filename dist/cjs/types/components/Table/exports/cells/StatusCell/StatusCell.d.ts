@@ -6,5 +6,6 @@ export interface StatusCellOptions<Data> {
     showString?: boolean;
 }
 type StatusCellValue = string | null;
+export declare const StatusCellName = "StatusCell";
 declare function StatusCell<Data>(props: ExtendedCellProps<Data, StatusCellValue>): JSX.Element;
 export default StatusCell;

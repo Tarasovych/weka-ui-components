@@ -17,10 +17,10 @@ export declare const urlFilterParsers: {
     readonly severity: (rawValue: Parameters<UrlFilterParser>[0]) => null;
 };
 export declare const filterFns: {
-    readonly multiSelect: <Data>(rows: ExtendedRow<Data>[], columnId: string, filterValue: string[] | number[] | string) => ExtendedRow<Data>[];
-    readonly date: <Data_1>(rows: ExtendedRow<Data_1>[], columnId: string, { startTime, endTime }: {
+    readonly multiSelect: <Data>(row: ExtendedRow<Data>, columnId: string, filterValue: string[] | number[] | string) => boolean;
+    readonly date: <Data_1>(row: ExtendedRow<Data_1>, columnId: string, { startTime, endTime }: {
         startTime?: string | undefined;
         endTime?: string | undefined;
-    }) => ExtendedRow<Data_1>[];
-    readonly severity: <Data_2>(rows: ExtendedRow<Data_2>[], columnId: string, filterValue: Severities) => ExtendedRow<Data_2>[];
+    }) => boolean;
+    readonly severity: <Data_2>(row: ExtendedRow<Data_2>, columnId: string, filterValue: Severities) => boolean;
 };

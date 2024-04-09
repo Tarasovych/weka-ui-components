@@ -7,6 +7,6 @@ type TieringValue = {
     state: string;
     detachProgress: number | null;
 };
-type TieringCellValue = TieringValue[];
-declare function TieringCell<Data>({ cell }: ExtendedCellProps<Data, TieringCellValue>): JSX.Element;
+export type TieringCellValue = TieringValue[];
+declare function TieringCell<Data>(props: ExtendedCellProps<Data, TieringCellValue>): JSX.Element;
 export default TieringCell;

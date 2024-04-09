@@ -11,7 +11,7 @@ export interface CapacityCellOptions {
   noDataLabel?: string
 }
 
-interface CapacityCellValue {
+export interface CapacityCellValue {
   used: number
   total: number
   isThin: boolean
@@ -38,18 +38,21 @@ function getBarColor(used: number, total: number, caution = false) {
   }
 }
 
+export const CapacityCellName = 'CapacityCell'
+
 function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>) {
-  const { cell } = props
+  const { cell, customValue } = props
 
   const cellDef = cell.column.columnDef.meta?.cell
-  console.log('cellDef', cellDef)
-  if (cellDef && cellDef.type !== 'CapacityCell') {
+
+  if (cellDef && cellDef.type !== CapacityCellName) {
     throw new Error(
-      'CapacityCell: cell options are missing or the type is incorrect'
+      `${CapacityCellName}: cell options are missing or the type is incorrect`
     )
   }
 
-  const value = cell.getValue()
+  const value = customValue !== undefined ? customValue : cell.getValue()
+
   const { noDataLabel = 'Unknown' } = cellDef?.options ?? {}
 
   const { used, total, isThin, maxThin, minThin, caution } = value

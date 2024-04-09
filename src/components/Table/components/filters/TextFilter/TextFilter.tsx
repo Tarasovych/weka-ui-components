@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { ExtendedFilterProps } from '../../../types'
 import { EMPTY_STRING } from '../../../../../consts'
-
-import './textFilter.scss'
 import FilterWrapper from '../../FilterWrapper'
 
-function TextFilter<Data, Value>({ column }: ExtendedFilterProps<Data, Value>) {
+import './textFilter.scss'
+export interface TextFilterOptions {
+  shouldDisableBtn?: (val: string) => boolean
+  disabledBtnTooltip?: string
+}
+
+function TextFilter<Data, Value>({
+  column,
+  filterOptions
+}: ExtendedFilterProps<Data, Value, TextFilterOptions>) {
   const filterValue = column.getFilterValue()
 
   if (typeof filterValue !== 'string' && filterValue !== undefined) {
@@ -18,7 +25,12 @@ function TextFilter<Data, Value>({ column }: ExtendedFilterProps<Data, Value>) {
   }, [filterValue])
 
   return (
-    <FilterWrapper column={column} value={value}>
+    <FilterWrapper
+      column={column}
+      value={value}
+      shouldDisableBtn={filterOptions.shouldDisableBtn}
+      disabledBtnTooltip={filterOptions.disabledBtnTooltip}
+    >
       <input
         autoFocus
         className='table-text-filter'

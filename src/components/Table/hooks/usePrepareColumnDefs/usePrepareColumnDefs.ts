@@ -2,6 +2,7 @@ import { ExtendedColumnDef, ExtendedColumnDefWithId } from '../../types'
 import { Utils } from '../../../..'
 import { useMemo } from 'react'
 import { TABLE_FILTERS_MAP } from '../../tableConsts'
+import * as Cells from '../../exports/cells'
 
 function addId<Data, Value>({
   columnDefs
@@ -65,6 +66,29 @@ function addFilterFn<Data, Value>({
   })
 }
 
+function addCells<Data, Value>({
+  columnDefs
+}: {
+  columnDefs: ExtendedColumnDef<Data, Value>[]
+}) {
+  return columnDefs.map((column) => {
+    const cellDef = column.meta?.cell
+
+    if (!cellDef || (cellDef && column.cell)) {
+      return column
+    }
+
+    if (cellDef.type in Cells) {
+      return {
+        ...column,
+        cell: Cells[cellDef.type]
+      }
+    }
+
+    throw new Error(`Unknown cell type: ${cellDef.type}`)
+  })
+}
+
 function usePrepareColumnDefs<Data, Value>({
   columnDefs
 }: {
@@ -75,8 +99,11 @@ function usePrepareColumnDefs<Data, Value>({
     const columnDefsWithFilterFns = addFilterFn({
       columnDefs: columnDefsWithIds
     })
+    const columnDefsWithCells = addCells({
+      columnDefs: columnDefsWithFilterFns
+    })
 
-    return columnDefsWithFilterFns
+    return columnDefsWithCells
   }, [columnDefs])
 }
 

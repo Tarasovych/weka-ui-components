@@ -15,13 +15,19 @@ export interface IconButtonCellOptions<Data> {
   extraClass?: string
 }
 
-function IconButtonCell<Data>(props: ExtendedCellProps<Data, unknown>) {
+export type IconButtonCellValue = never
+
+export const IconButtonCellName = 'IconButtonCell'
+
+function IconButtonCell<Data>(
+  props: ExtendedCellProps<Data, IconButtonCellValue>
+) {
   const { row, column } = props
 
   const cellDef = column.columnDef.meta?.cell
-  if (!cellDef || cellDef.type !== 'IconButtonCell') {
+  if (!cellDef || cellDef.type !== IconButtonCellName) {
     throw new Error(
-      'IconButtonCell: cell options are missing or the type is incorrect'
+      `${IconButtonCellName}: cell options are missing or the type is incorrect`
     )
   }
 

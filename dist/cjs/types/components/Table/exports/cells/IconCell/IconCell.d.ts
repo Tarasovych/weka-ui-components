@@ -7,5 +7,6 @@ export interface IconCellOptions<Data> {
     tooltipText?: string | ((values: Data) => string);
 }
 type IconCellValue = string | boolean | null | undefined;
+export declare const IconCellName = "IconCell";
 declare function IconCell<Data>(props: ExtendedCellProps<Data, IconCellValue>): JSX.Element;
 export default IconCell;

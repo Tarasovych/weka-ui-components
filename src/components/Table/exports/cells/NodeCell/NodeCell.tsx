@@ -6,16 +6,18 @@ import clsx from 'clsx'
 import './nodeCell.scss'
 import { ExtendedCellProps } from '../../../types'
 
-type NodeCellValue = {
+export type NodeCellValue = {
   nid: string
   isBackend: boolean
   roles?: string[]
 }
 
 function NodeCell<Data>(props: ExtendedCellProps<Data, NodeCellValue>) {
-  const { cell } = props
+  const { cell, customValue } = props
 
-  const { nid, isBackend, roles } = cell.getValue()
+  const value = customValue !== undefined ? customValue : cell.getValue()
+
+  const { nid, isBackend, roles } = value
 
   const isBackendClasses = clsx({
     'is-backend': isBackend,

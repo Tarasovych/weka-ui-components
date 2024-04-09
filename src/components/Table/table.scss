@@ -139,19 +139,15 @@
         }
 
         .table-cell {
-          overflow: hidden;
           font-size: 14px;
-          box-sizing: border-box;
-          min-width: 40px;
         }
       }
     }
   }
 
   .react-table {
-    display: flex;
-    flex-direction: column;
     background-color: var(--neutral-t4);
+    border-collapse: separate;
     border-spacing: 0;
     position: relative;
     width: 100%;
@@ -172,11 +168,9 @@
     .header-cell-for-expandable {
       width: 8px;
       padding-right: 0 !important;
-      border-right: none;
     }
 
     .table-header {
-      display: flex;
       border-bottom: 1px solid var(--ironhide-key);
       vertical-align: baseline;
       text-align: start;
@@ -184,6 +178,7 @@
       font-weight: normal;
       background-color: var(--neutral-t4);
       z-index: 1;
+      display: flex;
       user-select: none;
 
       .table-headline {
@@ -225,38 +220,34 @@
         min-width: 4px !important;
         background-color: var(--ironhide-key);
         margin-left: 8px;
-        &:hover,
-        &-is-resizing {
+        &:hover, &-is-resizing {
           background-color: var(--main-color);
         }
       }
+    }
 
-      .resizer {
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: 100%;
-        width: 5px;
-        background: rgba(0, 0, 0, 0.5);
-        cursor: col-resize;
-        user-select: none;
-        touch-action: none;
-      }
-
-      .resizer.isResizing {
-        background: blue;
-        opacity: 1;
+    .table-body {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      &:empty::after {
+        content: attr(emptymessage);
+        display: flex;
+        justify-content: center;
+        background-color: var(--table-background);
+        padding-top: 100px;
+        padding-bottom: 100px;
+        font-size: 18px;
+        color: var(--ironhide-s3);
       }
     }
 
     .table-line {
       display: flex;
-      flex: 1 0 auto;
       position: relative;
       height: 52px;
       background-color: var(--neutral-t4);
       box-sizing: border-box;
-      transition-property: background-color, background;
 
       &.clickable {
         cursor: pointer;
@@ -267,7 +258,7 @@
       }
 
       &.is-highlighted {
-        background-color: var(--prime-t3) !important;
+        background-color: var(--highlighted-row) !important;
       }
 
       &.is-expand {
@@ -282,12 +273,8 @@
       .expand-cell {
         width: 8px;
         padding-right: 0;
-
-        &-content {
-          display: flex;
-          align-items: center;
-          height: 100%;
-        }
+        display: flex;
+        align-items: center;
 
         svg {
           width: 8px;
@@ -318,8 +305,6 @@
     }
 
     .sub-table-line {
-      display: block;
-
       td {
         border: 2px solid var(--main-color);
         border-top: none;
@@ -346,8 +331,6 @@
       .pagination {
         display: flex;
         align-items: center;
-        width: 120px;
-        justify-content: space-between;
         user-select: none;
 
         svg {
@@ -385,58 +368,21 @@
     font-size: 18px;
     color: var(--ironhide-s3);
   }
-}
 
-html {
-  font-family: sans-serif;
-  font-size: 14px;
-}
-
-table {
-  border: 1px solid lightgray;
-  border-collapse: collapse;
-}
-
-tbody {
-  border-bottom: 1px solid lightgray;
-}
-
-th {
-  border-bottom: 1px solid lightgray;
-  padding: 2px 4px;
-}
-
-tfoot {
-  color: gray;
-}
-
-tfoot th {
-  font-weight: normal;
-}
-
-.resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 5px;
-  background: rgba(0, 0, 0, 0.5);
-  cursor: col-resize;
-  user-select: none;
-  touch-action: none;
-}
-
-.resizer.isResizing {
-  background: blue;
-  opacity: 1;
-}
-
-@media (hover: hover) {
   .resizer {
-    opacity: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background: rgba(0, 0, 0, 0.5);
+    cursor: col-resize;
+    user-select: none;
+    touch-action: none;
   }
-
-  *:hover > .resizer {
+  
+  .resizer.isResizing {
+    background: blue;
     opacity: 1;
   }
 }

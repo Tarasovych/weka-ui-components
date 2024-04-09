@@ -1,2 +1,2 @@
 export { default } from './IconCell'
-export type * from './IconCell'
+export * from './IconCell'

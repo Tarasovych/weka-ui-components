@@ -18,7 +18,7 @@ export const tableUtils = {
     'accessorFn' in column.columnDef || 'accessorKey' in column.columnDef
 }
 
-export const sortingFns = {
+export const customSortingFns = {
   stringSort: <Data>(
     rowA: ExtendedRow<Data>,
     rowB: ExtendedRow<Data>,
@@ -28,9 +28,7 @@ export const sortingFns = {
     let b = rowB.getValue(columnId) || EMPTY_STRING
 
     if (typeof a !== 'string' || typeof b !== 'string') {
-      throw new Error(
-        'stringSort: values are not strings. ColumnId: ' + columnId
-      )
+      return a > b ? 1 : -1
     }
 
     if (utils.isNumber(a) && utils.isNumber(b)) {
@@ -129,72 +127,79 @@ export const urlFilterParsers = {
 
 export const filterFns = {
   multiSelect<Data>(
-    rows: ExtendedRow<Data>[],
+    row: ExtendedRow<Data>,
     columnId: string,
     filterValue: string[] | number[] | string
-  ) {
+  ): boolean {
     if (!filterValue) {
-      return rows
+      return false
     }
     if (Array.isArray(filterValue)) {
-      return rows.filter((row) =>
-        filterValue.some((val) => {
-          const rowValue = row.getValue(columnId)
+      return filterValue.some((val) => {
+        const rowValue = row.getValue(columnId)
 
-          return Array.isArray(rowValue)
-            ? rowValue.some((item) => item?.toString() === val?.toString())
-            : rowValue?.toString() === val?.toString()
-        })
-      )
+        return Array.isArray(rowValue)
+          ? rowValue.some((item) => item?.toString() === val?.toString())
+          : rowValue?.toString() === val?.toString()
+      })
     }
-    return rows.filter(
-      (row) => filterValue?.toString() === row.getValue(columnId)?.toString()
-    )
+
+    return filterValue?.toString() === row.getValue(columnId)?.toString()
   },
   date<Data>(
-    rows: ExtendedRow<Data>[],
+    row: ExtendedRow<Data>,
     columnId: string,
     { startTime, endTime }: { startTime?: string; endTime?: string }
-  ) {
-    return rows.filter((row) => {
-      const valueTime = row.getValue(columnId) ?? 0
-      if (typeof valueTime !== 'string') {
-        throw new Error(
-          `Date filter: value is not a string. ColumnId: ${columnId}`
-        )
-      }
+  ): boolean {
+    const valueTime = row.getValue(columnId) ?? 0
+    if (typeof valueTime !== 'string') {
+      throw new Error(
+        `Date filter: value is not a string. ColumnId: ${columnId}`
+      )
+    }
 
-      const valueDate = new Date(valueTime)
+    const valueDate = new Date(valueTime)
 
-      if (startTime && endTime) {
-        return (
-          new Date(endTime) >= valueDate && valueDate >= new Date(startTime)
-        )
-      }
+    if (startTime && endTime) {
+      return new Date(endTime) >= valueDate && valueDate >= new Date(startTime)
+    }
 
-      if (startTime) {
-        return valueDate >= new Date(startTime)
-      }
+    if (startTime) {
+      return valueDate >= new Date(startTime)
+    }
 
-      if (endTime) {
-        return new Date(endTime) >= valueDate
-      }
+    if (endTime) {
+      return new Date(endTime) >= valueDate
+    }
 
-      return true
-    })
+    return true
   },
   severity<Data>(
-    rows: ExtendedRow<Data>[],
+    row: ExtendedRow<Data>,
     columnId: string,
     filterValue: Severities
-  ) {
-    return rows.filter((row) => {
-      const severity = row.getValue(columnId)
+  ): boolean {
+    const severity = row.getValue(columnId)
 
-      const rowSeverityIndex = SEVERITIES.indexOf(severity)
-      const selectedSeverityIndex = SEVERITIES.indexOf(filterValue)
+    const isSeverity = (value: any): value is Severities =>
+      SEVERITIES.includes(value)
 
-      return rowSeverityIndex >= selectedSeverityIndex
-    })
+    if (!isSeverity(severity)) {
+      throw new Error(
+        `Severity filter: value is not a valid severity. Column ID: ${columnId}`
+      )
+    }
+
+    const rowSeverityIndex = SEVERITIES.indexOf(severity)
+
+    if (rowSeverityIndex === -1) {
+      throw new Error(
+        `Severity filter: value is not a valid severity. Column ID: ${columnId}`
+      )
+    }
+
+    const selectedSeverityIndex = SEVERITIES.indexOf(filterValue)
+
+    return rowSeverityIndex >= selectedSeverityIndex
   }
 } as const

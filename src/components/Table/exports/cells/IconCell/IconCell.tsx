@@ -8,22 +8,24 @@ import { StatusOk } from '../../../../../svgs'
 import './iconCell.scss'
 
 export interface IconCellOptions<Data> {
-  Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
+  Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>
   extraClass?: string | ((values: Data) => string)
   tooltipText?: string | ((values: Data) => string)
 }
 
-type IconCellValue = string | boolean | null | undefined
+export type IconCellValue = string | boolean | null | undefined
+
+export const IconCellName = 'IconCell'
 
 function IconCell<Data>(props: ExtendedCellProps<Data, IconCellValue>) {
-  const { cell, column, row } = props
-
-  const value = cell.getValue()
+  const { cell, column, row, customValue } = props
 
   const cellDef = column.columnDef.meta?.cell
-  if (cellDef && cellDef.type !== 'IconCell') {
-    throw new Error('IconCell: cell options type is incorrect')
+  if (cellDef && cellDef.type !== IconCellName) {
+    throw new Error(`${IconCellName}: cell options type is incorrect`)
   }
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   const {
     Icon = StatusOk,

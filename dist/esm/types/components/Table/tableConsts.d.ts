@@ -5,7 +5,7 @@ export declare const TABLE_FILTERS_MAP: {
     readonly multiSelect: {
         readonly component: typeof MultiSelectFilter;
         readonly parser: (rawValue: string[] | Record<string, string[]>) => string[] | null;
-        readonly filterFn: <Data>(rows: import("./types").ExtendedRow<Data>[], columnId: string, filterValue: string | string[] | number[]) => import("./types").ExtendedRow<Data>[];
+        readonly filterFn: <Data>(row: import("./types").ExtendedRow<Data>, columnId: string, filterValue: string | string[] | number[]) => boolean;
     };
     readonly select: {
         readonly component: typeof SelectFilter;
@@ -17,10 +17,10 @@ export declare const TABLE_FILTERS_MAP: {
             startTime: string;
             endTime: string;
         } | null;
-        readonly filterFn: <Data_1>(rows: import("./types").ExtendedRow<Data_1>[], columnId: string, { startTime, endTime }: {
+        readonly filterFn: <Data_1>(row: import("./types").ExtendedRow<Data_1>, columnId: string, { startTime, endTime }: {
             startTime?: string | undefined;
             endTime?: string | undefined;
-        }) => import("./types").ExtendedRow<Data_1>[];
+        }) => boolean;
     };
     readonly text: {
         readonly component: typeof TextFilter;
@@ -29,6 +29,6 @@ export declare const TABLE_FILTERS_MAP: {
     readonly severity: {
         readonly component: typeof SeverityFilter;
         readonly parser: (rawValue: string[] | Record<string, string[]>) => null;
-        readonly filterFn: <Data_2>(rows: import("./types").ExtendedRow<Data_2>[], columnId: string, filterValue: "DEBUG" | "INFO" | "WARNING" | "MINOR" | "MAJOR" | "CRITICAL") => import("./types").ExtendedRow<Data_2>[];
+        readonly filterFn: <Data_2>(row: import("./types").ExtendedRow<Data_2>, columnId: string, filterValue: "DEBUG" | "INFO" | "WARNING" | "MINOR" | "MAJOR" | "CRITICAL") => boolean;
     };
 };

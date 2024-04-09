@@ -8,38 +8,30 @@ import { ExtendedCell, ExtendedCellProps } from '../../../types'
 import './defaultCell.scss'
 
 export interface DefaultCellOptions<Data, Value> {
-  getUrl?: (cell: ExtendedCell<Data, Value>) => string
+  getUrl?: (values: Data) => string
   openInNewTab?: boolean
-  tooltipText?: string | ((cella: ExtendedCell<Data, Value>) => string)
+  tooltipText?: string | ((cell: ExtendedCell<Data, Value>) => string)
 }
 
-type DefaultCellValue = unknown
+export type DefaultCellValue = string | number | string[] | null | undefined
+
+export const DefaultCellName = 'DefaultCell'
 
 function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
-  const { cell, column } = props
+  const { cell, row, column, customValue } = props
 
-  const value = cell.getValue()
-
-  if (
-    typeof value !== 'string' &&
-    typeof value !== 'number' &&
-    !Array.isArray(value) &&
-    value !== null &&
-    value !== undefined
-  ) {
-    throw new Error('DefaultCell: value is not a string or a number')
+  const cellDef = column.columnDef.meta?.cell
+  if (cellDef && cellDef.type !== DefaultCellName) {
+    throw new Error(
+      `${DefaultCellName}: cell options are missing or the type is incorrect`
+    )
   }
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   const formattedValue = Array.isArray(value)
     ? value.join(', ')
     : value?.toString() ?? EMPTY_STRING
-
-  const cellDef = column.columnDef.meta?.cell
-  if (cellDef && cellDef.type !== 'DefaultCell') {
-    throw new Error(
-      'DefaultCell: cell options are missing or the type is incorrect'
-    )
-  }
 
   const {
     getUrl,
@@ -84,7 +76,7 @@ function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>) {
     >
       {getUrl ? (
         <Link
-          to={getUrl(cell)}
+          to={getUrl(row.original)}
           className='table-link'
           {...(openInNewTab && {
             target: '_blank',

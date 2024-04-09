@@ -1,8 +1,8 @@
 /// <reference types="react" />
 import { ExtendedCellProps } from '../../../types';
-type ProgressCellValue = {
+export type ProgressCellValue = {
     status: string;
     progress: string;
 };
-declare function ProgressCell<Data>({ cell }: ExtendedCellProps<Data, ProgressCellValue>): JSX.Element;
+declare function ProgressCell<Data>(props: ExtendedCellProps<Data, ProgressCellValue>): JSX.Element;
 export default ProgressCell;

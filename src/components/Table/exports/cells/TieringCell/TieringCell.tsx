@@ -14,7 +14,7 @@ type TieringValue = {
   detachProgress: number | null
 }
 
-type TieringCellValue = TieringValue[]
+export type TieringCellValue = TieringValue[]
 
 function getSVG({ mode, name, state, detachProgress = 0 }: TieringValue) {
   if (state === OBS_IS_DETACHING) {
@@ -34,10 +34,10 @@ function getSVG({ mode, name, state, detachProgress = 0 }: TieringValue) {
   return <Icon key={name} className={mode.toLowerCase()} />
 }
 
-function TieringCell<Data>({
-  cell
-}: ExtendedCellProps<Data, TieringCellValue>) {
-  const value = cell.getValue()
+function TieringCell<Data>(props: ExtendedCellProps<Data, TieringCellValue>) {
+  const { cell, customValue } = props
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   return <div className='tiering-cell'>{value.map((val) => getSVG(val))}</div>
 }

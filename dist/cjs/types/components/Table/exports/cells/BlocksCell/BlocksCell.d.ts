@@ -12,5 +12,6 @@ type BlocksCellValue = {
     id: string;
     status: string;
 }[];
+export declare const BlocksCellName = "BlocksCell";
 declare function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>): JSX.Element;
 export default BlocksCell;

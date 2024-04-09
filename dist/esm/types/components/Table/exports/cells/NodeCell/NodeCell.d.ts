@@ -1,7 +1,7 @@
 /// <reference types="react" />
 import './nodeCell.scss';
 import { ExtendedCellProps } from '../../../types';
-type NodeCellValue = {
+export type NodeCellValue = {
     nid: string;
     isBackend: boolean;
     roles?: string[];

@@ -12,5 +12,6 @@ interface CapacityCellValue {
     minThin: number;
     caution: boolean;
 }
+export declare const CapacityCellName = "CapacityCell";
 declare function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>): JSX.Element;
 export default CapacityCell;

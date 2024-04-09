@@ -4,10 +4,12 @@ import CapacityBar from '../../../../CapacityBar'
 import './barCell.scss'
 import { ExtendedCellProps } from '../../../types'
 
-type BarCellValue = number
+export type BarCellValue = number
 
-function BarCell<Data>({ cell }: ExtendedCellProps<Data, BarCellValue>) {
-  const value = cell.getValue()
+function BarCell<Data>(props: ExtendedCellProps<Data, BarCellValue>) {
+  const { cell, customValue } = props
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   return (
     <div className='bar-cell'>

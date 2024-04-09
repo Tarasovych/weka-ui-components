@@ -6,7 +6,8 @@ import type {
   HeaderGroup,
   Cell,
   Row,
-  ColumnFilter
+  ColumnFilter,
+  SortingFn
 } from '@tanstack/react-table'
 import '@tanstack/react-table'
 import {
@@ -16,15 +17,26 @@ import {
   DateCellOptions,
   DefaultCellOptions,
   IconCellOptions,
-  SwitchCellOptions
+  SwitchCellOptions,
+  StatusCellOptions,
+  IconButtonCellOptions,
+  ApiCallCellName,
+  CapacityCellName,
+  StatusCellName,
+  DateCellName,
+  SwitchCellName,
+  IconCellName,
+  DefaultCellName,
+  IconButtonCellName,
+  BlocksCellName
 } from './exports'
-import { StatusCellOptions } from './exports/cells/StatusCell/StatusCell'
-import { IconButtonCellOptions } from './exports/cells/IconButtonCell'
+
 import {
   DateFilterOptions,
   FilterTypes,
   MultiSelectFilterOptions,
-  SelectFilterOptions
+  SelectFilterOptions,
+  TextFilterOptions
 } from './components'
 
 export type ExtendedTable<Data> = Table<Data>
@@ -50,6 +62,7 @@ export interface ExtendedCellProps<Data, Value> {
   cell: ExtendedCell<Data, Value>
   getValue: () => unknown
   renderValue: () => unknown
+  customValue?: Value
 }
 
 type FilterDef<Data, Type extends FilterTypes, FilterOptions = undefined> =
@@ -72,10 +85,12 @@ type CellDef<
   Options = undefined
 > = {
   onClick?: (cell: Cell<TData, TValue>) => void
-} & (CellOptions<never, never> | CellOptions<Type, Options>)
+} & (never | CellOptions<Type, Options>)
 
 declare module '@tanstack/react-table' {
-  // eslint-disable-next-line unused-imports/no-unused-vars
+  interface SortingFns {
+    stringSort: SortingFn<unknown>
+  }
   interface ColumnMeta<TData, TValue> {
     defaultHidden?: boolean
     headerTooltip?: string
@@ -84,18 +99,32 @@ declare module '@tanstack/react-table' {
       | FilterDef<TData, 'multiSelect', MultiSelectFilterOptions>
       | FilterDef<TData, 'select', SelectFilterOptions>
       | FilterDef<TData, 'severity'>
-      | FilterDef<TData, 'text'>
+      | FilterDef<TData, 'text', TextFilterOptions>
     cell?:
-      | CellDef<TData, TValue, 'ApiCallCell', ApiCallCellOptions<TData, TValue>>
-      | CellDef<TData, TValue, 'CapacityCell', CapacityCellOptions>
-      | CellDef<TData, TValue, 'StatusCell', StatusCellOptions<TData>>
-      | CellDef<TData, TValue, 'BlocksCell', BlocksCellOptions<TData, TValue>>
-      | CellDef<TData, TValue, 'DateCell', DateCellOptions>
-      | CellDef<TData, TValue, 'SwitchCell', SwitchCellOptions<TData>>
-      | CellDef<TData, TValue, 'IconCell', IconCellOptions<TData>>
-      | CellDef<TData, TValue, 'DefaultCell', DefaultCellOptions<TData, TValue>>
-      | CellDef<TData, TValue, 'IconButtonCell', IconButtonCellOptions<TData>>
-
+      | CellDef<
+          TData,
+          TValue,
+          typeof ApiCallCellName,
+          ApiCallCellOptions<TData, TValue>
+        >
+      | CellDef<TData, TValue, typeof CapacityCellName, CapacityCellOptions>
+      | CellDef<TData, TValue, typeof StatusCellName, StatusCellOptions<TData>>
+      | CellDef<TData, TValue, typeof BlocksCellName, BlocksCellOptions<TData>>
+      | CellDef<TData, TValue, typeof DateCellName, DateCellOptions>
+      | CellDef<TData, TValue, typeof SwitchCellName, SwitchCellOptions<TData>>
+      | CellDef<TData, TValue, typeof IconCellName, IconCellOptions<TData>>
+      | CellDef<
+          TData,
+          TValue,
+          typeof DefaultCellName,
+          DefaultCellOptions<TData, TValue>
+        >
+      | CellDef<
+          TData,
+          TValue,
+          typeof IconButtonCellName,
+          IconButtonCellOptions<TData>
+        >
     columnTitle?: string
   }
 }

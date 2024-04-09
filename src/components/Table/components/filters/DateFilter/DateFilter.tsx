@@ -28,7 +28,7 @@ function DateFilter<Data>({
 }: ExtendedFilterProps<Data, DateFilterValue, DateFilterOptions>) {
   const filterValue = column.getFilterValue()
 
-  if (!isDateFilterValue(filterValue)) {
+  if (!isDateFilterValue(filterValue) && filterValue !== undefined) {
     throw new Error('DateFilter: Invalid filter value')
   }
 

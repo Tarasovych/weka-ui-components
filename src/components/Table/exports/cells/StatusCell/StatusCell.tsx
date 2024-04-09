@@ -17,7 +17,7 @@ export interface StatusCellOptions<Data> {
   showString?: boolean
 }
 
-type StatusCellValue = string | null
+export type StatusCellValue = string | null
 
 function getIcon(status: StatusCellValue) {
   switch (status) {
@@ -45,15 +45,17 @@ function getIcon(status: StatusCellValue) {
   }
 }
 
-function StatusCell<Data>(props: ExtendedCellProps<Data, StatusCellValue>) {
-  const { cell, row } = props
+export const StatusCellName = 'StatusCell'
 
-  const value = cell.getValue()
+function StatusCell<Data>(props: ExtendedCellProps<Data, StatusCellValue>) {
+  const { cell, row, customValue } = props
 
   const cellDef = cell.column.columnDef?.meta?.cell
-  if (cellDef?.type && cellDef.type !== 'StatusCell') {
-    throw new Error('StatusCell: cell options type is incorrect')
+  if (cellDef && cellDef.type !== StatusCellName) {
+    throw new Error(`${StatusCellName}: cell options type is incorrect`)
   }
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   const { getTooltip, showString } = cellDef?.options ?? {}
 

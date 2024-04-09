@@ -3,7 +3,7 @@ import Tooltip from '../../../../Tooltip'
 import Utils from '../../../../../utils'
 import { ExtendedCellProps } from '../../../types'
 
-type UptimeCellValue = string
+export type UptimeCellValue = string
 
 function getMinTimeDiff(value: string) {
   const fullTime = Utils.getTimeDiffString(value)
@@ -17,8 +17,11 @@ function getMinTimeDiff(value: string) {
   return { value: splitTime[2], exactValue: splitTime[2] }
 }
 
-function UptimeCell<Data>({ cell }: ExtendedCellProps<Data, UptimeCellValue>) {
-  const value = cell.getValue()
+function UptimeCell<Data>(props: ExtendedCellProps<Data, UptimeCellValue>) {
+  const { cell, customValue } = props
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
+
   const [uptime, setUptime] = useState(getMinTimeDiff(value).value)
   const [exactUptime, setExactUptime] = useState(
     getMinTimeDiff(value).exactValue

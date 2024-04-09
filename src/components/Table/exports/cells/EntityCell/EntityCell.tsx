@@ -6,10 +6,13 @@ import { ExtendedCellProps } from '../../../types'
 
 import './entityCell.scss'
 
-type EntityCellValue = string
+export type EntityCellValue = string
 
-function EntityCell<Data>({ cell }: ExtendedCellProps<Data, EntityCellValue>) {
-  const value = cell.getValue()
+function EntityCell<Data>(props: ExtendedCellProps<Data, EntityCellValue>) {
+  const { cell, customValue } = props
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
+
   const Icon = value === ORIGIN_OPTIONS.USER ? User : Weka
 
   return (

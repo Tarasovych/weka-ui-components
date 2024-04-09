@@ -1,11 +1,11 @@
 /// <reference types="react" />
-import { ExtendedRow, ExtendedTable } from '../../types';
+import { ExtendedTable } from '../../types';
 interface TableTopProps<Data> {
     table: ExtendedTable<Data>;
     title?: string;
     itemsAmount?: number;
     maxRows?: number;
-    rows: ExtendedRow<Data>[];
+    data: Data[];
     canExpandAll: boolean;
     isExpandable: boolean;
     tableActions: any;

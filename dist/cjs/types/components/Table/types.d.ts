@@ -1,8 +1,6 @@
 import type { Column, ColumnDef, FilterFn, Table, HeaderGroup, Cell, Row, ColumnFilter } from '@tanstack/react-table';
 import '@tanstack/react-table';
-import { ApiCallCellOptions, BlocksCellOptions, CapacityCellOptions, DateCellOptions, DefaultCellOptions, IconCellOptions, SwitchCellOptions } from './exports';
-import { StatusCellOptions } from './exports/cells/StatusCell/StatusCell';
-import { IconButtonCellOptions } from './exports/cells/IconButtonCell';
+import { ApiCallCellOptions, BlocksCellOptions, CapacityCellOptions, DateCellOptions, DefaultCellOptions, IconCellOptions, SwitchCellOptions, StatusCellOptions, IconButtonCellOptions, ApiCallCellName, CapacityCellName, StatusCellName, DateCellName, SwitchCellName, IconCellName, DefaultCellName, IconButtonCellName, BlocksCellName } from './exports';
 import { DateFilterOptions, FilterTypes, MultiSelectFilterOptions, SelectFilterOptions } from './components';
 export type ExtendedTable<Data> = Table<Data>;
 export type ExtendedColumnDef<Data, Value> = ColumnDef<Data, Value>;
@@ -38,7 +36,7 @@ declare module '@tanstack/react-table' {
         defaultHidden?: boolean;
         headerTooltip?: string;
         filter?: FilterDef<TData, 'date', DateFilterOptions> | FilterDef<TData, 'multiSelect', MultiSelectFilterOptions> | FilterDef<TData, 'select', SelectFilterOptions> | FilterDef<TData, 'severity'> | FilterDef<TData, 'text'>;
-        cell?: CellDef<TData, TValue, 'ApiCallCell', ApiCallCellOptions<TData, TValue>> | CellDef<TData, TValue, 'CapacityCell', CapacityCellOptions> | CellDef<TData, TValue, 'StatusCell', StatusCellOptions<TData>> | CellDef<TData, TValue, 'BlocksCell', BlocksCellOptions<TData, TValue>> | CellDef<TData, TValue, 'DateCell', DateCellOptions> | CellDef<TData, TValue, 'SwitchCell', SwitchCellOptions<TData>> | CellDef<TData, TValue, 'IconCell', IconCellOptions<TData>> | CellDef<TData, TValue, 'DefaultCell', DefaultCellOptions<TData, TValue>> | CellDef<TData, TValue, 'IconButtonCell', IconButtonCellOptions<TData>>;
+        cell?: CellDef<TData, TValue, typeof ApiCallCellName, ApiCallCellOptions<TData, TValue>> | CellDef<TData, TValue, typeof CapacityCellName, CapacityCellOptions> | CellDef<TData, TValue, typeof StatusCellName, StatusCellOptions<TData>> | CellDef<TData, TValue, typeof BlocksCellName, BlocksCellOptions<TData, TValue>> | CellDef<TData, TValue, typeof DateCellName, DateCellOptions> | CellDef<TData, TValue, typeof SwitchCellName, SwitchCellOptions<TData>> | CellDef<TData, TValue, typeof IconCellName, IconCellOptions<TData>> | CellDef<TData, TValue, typeof DefaultCellName, DefaultCellOptions<TData, TValue>> | CellDef<TData, TValue, typeof IconButtonCellName, IconButtonCellOptions<TData>>;
         columnTitle?: string;
     }
 }

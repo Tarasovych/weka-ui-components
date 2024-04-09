@@ -11,21 +11,21 @@ export interface SwitchCellOptions<Data> {
   tooltipText?: string | ((value: boolean) => string)
 }
 
-type SwitchCellValue = boolean
+export type SwitchCellValue = boolean
 
-function SwitchCell<Data>({
-  cell,
-  column,
-  row
-}: ExtendedCellProps<Data, SwitchCellValue>) {
-  const value = cell.getValue()
+export const SwitchCellName = 'SwitchCell'
+
+function SwitchCell<Data>(props: ExtendedCellProps<Data, SwitchCellValue>) {
+  const { cell, column, row, customValue } = props
 
   const cellDef = column.columnDef.meta?.cell
-  if (!cellDef?.options || cellDef.type !== 'SwitchCell') {
+  if (!cellDef || cellDef.type !== SwitchCellName) {
     throw new Error(
-      'DefaultCell: cell options are missing or the type is incorrect'
+      `${SwitchCellName}: cell options are missing or the type is incorrect`
     )
   }
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   const { onChange, tooltipText = EMPTY_STRING } = cellDef.options
   const tooltip =

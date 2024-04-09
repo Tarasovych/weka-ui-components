@@ -8,5 +8,6 @@ export interface IconButtonCellOptions<Data> {
     tooltipText?: string | ((rowValues: Data) => string);
     extraClass?: string;
 }
+export declare const IconButtonCellName = "IconButtonCell";
 declare function IconButtonCell<Data>(props: ExtendedCellProps<Data, unknown>): JSX.Element;
 export default IconButtonCell;

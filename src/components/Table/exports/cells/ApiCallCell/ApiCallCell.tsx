@@ -9,13 +9,17 @@ export interface ApiCallCellOptions<Data, Value> {
   errorText: string
 }
 
-function ApiCallCell<Data>(props: ExtendedCellProps<Data, unknown>) {
+export type ApiCallCellValue = never
+
+export const ApiCallCellName = 'ApiCallCell'
+
+function ApiCallCell<Data>(props: ExtendedCellProps<Data, ApiCallCellValue>) {
   const { cell } = props
 
   const cellDef = cell.column.columnDef.meta?.cell
-  if (!cellDef?.options || cellDef.type !== 'ApiCallCell') {
+  if (!cellDef || cellDef.type !== ApiCallCellName) {
     throw new Error(
-      'ApiCallCell: cell options are missing or the type is incorrect'
+      `${ApiCallCellName}: cell options are missing or the type is incorrect`
     )
   }
 

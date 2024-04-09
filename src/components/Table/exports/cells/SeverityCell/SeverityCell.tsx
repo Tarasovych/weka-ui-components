@@ -6,12 +6,12 @@ import { ExtendedCellProps } from '../../../types'
 
 import './severityCell.scss'
 
-type SeverityCellValue = string
+export type SeverityCellValue = string
 
 function SeverityCell<Data>(props: ExtendedCellProps<Data, SeverityCellValue>) {
-  const { cell } = props
+  const { cell, customValue } = props
 
-  const value = cell.getValue()
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   const Icon = SEVERITIES_ICONS[value]
   const classes = clsx({

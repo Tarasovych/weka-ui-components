@@ -6,6 +6,7 @@ export interface DefaultCellOptions<Data, Value> {
     openInNewTab?: boolean;
     tooltipText?: string | ((cella: ExtendedCell<Data, Value>) => string);
 }
-type DefaultCellValue = unknown;
+type DefaultCellValue = string | number | string[] | null;
+export declare const DefaultCellName = "DefaultCell";
 declare function DefaultCell<Data>(props: ExtendedCellProps<Data, DefaultCellValue>): JSX.Element;
 export default DefaultCell;

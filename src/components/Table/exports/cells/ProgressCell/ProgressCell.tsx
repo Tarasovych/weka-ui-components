@@ -1,15 +1,17 @@
 import React from 'react'
 import { ExtendedCellProps } from '../../../types'
 
-type ProgressCellValue = {
+export type ProgressCellValue = {
   status: string
   progress: string
 }
 
-function ProgressCell<Data>({
-  cell
-}: ExtendedCellProps<Data, ProgressCellValue>) {
-  const { status, progress } = cell.getValue()
+function ProgressCell<Data>(props: ExtendedCellProps<Data, ProgressCellValue>) {
+  const { cell, customValue } = props
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
+
+  const { status, progress } = value
 
   const stringToShow = progress !== 'N/A' ? `${status} - ${progress}` : status
   return <div>{stringToShow}</div>

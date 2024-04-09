@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import { LongArrow } from '../../../../svgs'
 import TableFilter from '../TableFilter'
 import { Utils } from '../../../..'
+import { EMPTY_STRING } from '../../../../consts'
 
 interface HeaderGroupProps<Data> {
   headerGroup: ExtendedHeaderGroup<Data>
@@ -45,7 +46,7 @@ function ColumnHeader<Data>(props: HeaderGroupProps<Data>) {
 
       {headerGroup.headers.map((header) => {
         const column = header.column
-        const isHeaderEmpty = column.columnDef.header === ''
+        const isHeaderEmpty = column.columnDef.header === EMPTY_STRING
 
         const canSort = column.getCanSort()
         const columnSorted = column.getIsSorted()

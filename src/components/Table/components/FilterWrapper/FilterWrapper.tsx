@@ -24,15 +24,13 @@ interface FilterWrapperProps<Data, Value> {
   disabledBtnTooltip?: string
 }
 
-const defaultShouldDisable = () => false
-
 function FilterWrapper<Data, Value>({
   column,
   value,
   children,
   disabledBtnTooltip = EMPTY_STRING,
   hideWrapper = false,
-  shouldDisableBtn = defaultShouldDisable,
+  shouldDisableBtn,
   isPopperOpen: isPopperOpenOuter,
   onTogglePopper: onTogglePopperOuter
 }: FilterWrapperProps<Data, Value>) {
@@ -55,7 +53,7 @@ function FilterWrapper<Data, Value>({
   const isDisable =
     Utils.isEmpty(value) ||
     (Utils.isString(value) && value?.trim().length === 0) ||
-    shouldDisableBtn(value)
+    shouldDisableBtn?.(value)
 
   function onClick() {
     if (!isDisable) {
@@ -109,7 +107,7 @@ function FilterWrapper<Data, Value>({
                       </div>
                       <Tooltip
                         data={
-                          value && shouldDisableBtn(value)
+                          value && shouldDisableBtn?.(value)
                             ? disabledBtnTooltip
                             : EMPTY_STRING
                         }

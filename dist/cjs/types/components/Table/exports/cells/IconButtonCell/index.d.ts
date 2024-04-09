@@ -1,2 +1,2 @@
 export { default } from './IconButtonCell';
-export type * from './IconButtonCell';
+export * from './IconButtonCell';

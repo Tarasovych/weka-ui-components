@@ -4,29 +4,32 @@ import { DRIVES_STATUSES, NODES_STATUSES } from '../../../../../consts'
 import { Link } from 'react-router-dom'
 
 import './blocksCell.scss'
-import { ExtendedCell, ExtendedCellProps } from '../../../types'
+import { ExtendedCellProps } from '../../../types'
 
-export interface BlocksCellOptions<Data, Value> {
+export interface BlocksCellOptions<Data> {
   showTotalCountOnly?: boolean
   isLink?: boolean
-  getUrl?: (cell: ExtendedCell<Data, Value>) => string
+  getUrl?: (values: Data) => string
   openInNewTab?: boolean
 }
 
-type BlocksCellValue = {
+export type BlocksCellValue = {
   uid: string
   id: string
   status: string
 }[]
 
+export const BlocksCellName = 'BlocksCell'
+
 function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
-  const { cell, column } = props
-  const value = cell.getValue()
+  const { cell, column, customValue } = props
 
   const cellDef = column.columnDef.meta?.cell
-  if (cellDef && cellDef.type !== 'BlocksCell') {
-    throw new Error('BlocksCell: cell options type is incorrect')
+  if (cellDef && cellDef.type !== BlocksCellName) {
+    throw new Error(`${BlocksCellName}: cell options type is incorrect`)
   }
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   const { showTotalCountOnly, isLink, getUrl, openInNewTab } =
     cellDef?.options ?? {}
@@ -66,7 +69,7 @@ function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
 
   return isLink && getUrl ? (
     <Link
-      to={getUrl(cell)}
+      to={getUrl(cell.row.original)}
       {...(openInNewTab && {
         target: '_blank',
         rel: 'noopener noreferrer'

@@ -5,6 +5,7 @@ export interface SwitchCellOptions<Data> {
     onChange: (row: ExtendedRow<Data>) => void;
     tooltipText?: string | ((value: boolean) => string);
 }
-type SwitchCellValue = boolean;
-declare function SwitchCell<Data>({ cell, column, row }: ExtendedCellProps<Data, SwitchCellValue>): JSX.Element;
+export type SwitchCellValue = boolean;
+export declare const SwitchCellName = "SwitchCell";
+declare function SwitchCell<Data>(props: ExtendedCellProps<Data, SwitchCellValue>): JSX.Element;
 export default SwitchCell;

@@ -6,5 +6,6 @@ export interface SwitchCellOptions<Data> {
     tooltipText?: string | ((value: boolean) => string);
 }
 type SwitchCellValue = boolean;
+export declare const SwitchCellName = "SwitchCell";
 declare function SwitchCell<Data>({ cell, column, row }: ExtendedCellProps<Data, SwitchCellValue>): JSX.Element;
 export default SwitchCell;

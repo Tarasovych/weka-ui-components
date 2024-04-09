@@ -4,7 +4,7 @@ import './capacityCell.scss';
 export interface CapacityCellOptions {
     noDataLabel?: string;
 }
-interface CapacityCellValue {
+export interface CapacityCellValue {
     used: number;
     total: number;
     isThin: boolean;
@@ -12,5 +12,6 @@ interface CapacityCellValue {
     minThin: number;
     caution: boolean;
 }
+export declare const CapacityCellName = "CapacityCell";
 declare function CapacityCell<Data>(props: ExtendedCellProps<Data, CapacityCellValue>): JSX.Element;
 export default CapacityCell;

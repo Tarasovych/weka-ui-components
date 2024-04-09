@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useMemo, useRef } from 'react'
+import React, { ReactNode, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import {
   COLUMN_RESIZING_LISTENER,
   EMPTY_STRING,
@@ -19,7 +19,8 @@ import {
   getFacetedRowModel,
   getGroupedRowModel,
   getExpandedRowModel,
-  ColumnFilter
+  ColumnFilter,
+  FilterFn
 } from '@tanstack/react-table'
 import Utils from '../../utils'
 import localStorageService from '../../localStorageService'
@@ -28,7 +29,7 @@ import {
   useUrlFilters,
   useExplicitlyRemovedFilters,
   useHiddenColumns,
-  useAdaptivePageSize as usePageSize,
+  usePageSize,
   usePrepareColumnDefs
 } from './hooks'
 import { useToggle } from '../../hooks'
@@ -41,8 +42,8 @@ import {
 } from './types'
 import { ColumnHeader, TableRow, Pagination, TableTop } from './components'
 import { DefaultCell } from './exports'
-import { sortingFns } from './tableUtils'
 import { TABLE_FILTERS_MAP } from './tableConsts'
+import { customSortingFns } from './tableUtils'
 
 import './table.scss'
 
@@ -56,7 +57,8 @@ interface TableProps<Data, Value> {
   emptyMessage?: string
   tableActions?: Array<ReactNode>
   defaultSort?: string
-  globalFilter?: string | ((rows: ExtendedRow<Data>[]) => ExtendedRow<Data>[])
+  globalFilter?: any
+  globalFilterFn?: FilterFn<Data>
   defaultGlobalFilter?: string
   checkRowSelected?: (row: object) => boolean
   checkRowHighlighted?: (row: object) => boolean
@@ -90,7 +92,7 @@ interface TableProps<Data, Value> {
   hasResizableColumns?: boolean
   hasEmptyActionsCell?: boolean
   collapseRowsOnLeavingPage?: boolean
-  onSortingChange: (sort: { id: string; desc?: boolean }) => void
+  onSortingChange?: (sort: { id: string; desc?: boolean }) => void
   manualSorting?: boolean
 }
 
@@ -103,6 +105,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     title,
     defaultSort = EMPTY_STRING,
     globalFilter,
+    globalFilterFn,
     defaultGlobalFilter = EMPTY_STRING,
     checkRowSelected,
     checkRowHighlighted,
@@ -188,7 +191,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   })
   const [allRowsExpanded, toggleAllRowsExpanding] = useToggle(false)
 
-  // TODO: review
   const LSEnabledResizing = localStorageService.getItem(SAVED_RESIZING_ENABLED)
   const enabledResizingInLocalStorage =
     LSEnabledResizing &&
@@ -214,17 +216,19 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
       .concat(initialUrlFilters)
   }, [explicitlyRemovedFilters, extendedInitialUserFilters, initialUrlFilters])
 
-  const { hiddenInLocalStorage, onVisibilityChange } = useHiddenColumns({
+  const { hiddenInLocalStorage, onVisibilityChange } = useHiddenColumns<
+    Data,
+    Value
+  >({
     columns: columnDefs,
     filterCategory
   })
 
-  const table = useReactTable({
+  const table = useReactTable<Data>({
     columns: columnDefs,
     data,
     manualSorting,
     manualFilters,
-    onSortingChange,
     initialState: {
       columnVisibility: hiddenInLocalStorage,
       columnSizing: initialResizing,
@@ -235,14 +239,15 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
       columnFilters: initialFilters,
       globalFilter: defaultGlobalFilter,
       pagination: {
-        pageSize: fixedPageSize || 10
+        pageSize: fixedPageSize || 50
       }
     },
     defaultColumn: {
       cell: DefaultCell,
       size: 100,
-      sortingFn: sortingFns.stringSort
+      sortingFn: 'basic'
     },
+    sortingFns: customSortingFns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -253,23 +258,23 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     enableColumnResizing: isResizable,
     columnResizeMode: 'onChange',
     getRowCanExpand: () => rowCanExpand,
-    ...(grouping && { getGroupedRowModel: getGroupedRowModel() }),
     autoResetExpanded:
       collapseRowsOnLeavingPage && !allRowsExpanded && manualPagination,
     autoResetPage: false,
     paginateExpandedRows: false,
-    getRowId
+    getRowId,
+    ...(grouping && { getGroupedRowModel: getGroupedRowModel() }),
+    ...(onSortingChange && { onSortingChange }),
   })
 
-  if (globalFilter) {
-    table.setOptions((prev) => ({
-      ...prev,
-      state: {
-        ...prev.state,
-        globalFilter: globalFilter ?? prev.state.globalFilter
-      }
-    }))
-  }
+  table.setOptions((prev) => ({
+    ...prev,
+    globalFilterFn: globalFilterFn ?? prev.globalFilterFn,
+    state: {
+      ...prev.state,
+      globalFilter: globalFilter ?? prev.state.globalFilter
+    }
+  }))
 
   const {
     pagination: { pageIndex },
@@ -365,20 +370,23 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     table.setPageIndex(0)
   }, [pageCount, table])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!miniTable) {
       tableRef.current?.scrollTo(0, 0)
       if (collapseRowsOnLeavingPage && RowSubComponent && !isAllRowsExpanded) {
-        rows.forEach((row) => {
-          if (row.getIsExpanded()) {
-            row.toggleExpanded(false)
-          }
-        })
+        table.toggleAllRowsExpanded(false)
       }
     }
-  }, [pageIndex, rows])
+  }, [
+    pageIndex,
+    RowSubComponent,
+    collapseRowsOnLeavingPage,
+    isAllRowsExpanded,
+    miniTable,
+    table
+  ])
 
-  usePageSize({ table, tableRef, miniTable, fixedPageSize, rows })
+  usePageSize<Data>({ table, tableRef, miniTable, fixedPageSize, data })
 
   return (
     <div className={clsx('react-table-wrapper', extraClasses?.tableWrapper)}>
@@ -387,7 +395,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
           title={title}
           itemsAmount={itemsAmount}
           maxRows={maxRows}
-          rows={rows}
+          data={data}
           table={table}
           canExpandAll={canExpandAll}
           isExpandable={isExpandable}

@@ -16,19 +16,21 @@ export interface DateCellOptions {
   customFormat?: string
 }
 
-type DateCellValue = string
+export type DateCellValue = string
+
+export const DateCellName = 'DateCell'
 
 function DateCell<Data>(props: ExtendedCellProps<Data, DateCellValue>) {
-  const { cell, column } = props
-
-  const value = cell.getValue()
+  const { cell, column, customValue } = props
 
   const cellDef = column.columnDef.meta?.cell
-  if (cellDef && cellDef.type !== 'DateCell') {
+  if (cellDef && cellDef.type !== DateCellName) {
     throw new Error(
-      'DefaultCell: cell options are missing or the type is incorrect'
+      `${DateCellName}: cell options are missing or the type is incorrect`
     )
   }
+
+  const value = customValue !== undefined ? customValue : cell.getValue()
 
   const defaultCustomFormat = cellDef?.options.showMili
     ? TIME_FORMATS.DATE_TIME_SECONDS_MS

@@ -9,5 +9,6 @@ export interface DateCellOptions {
     customFormat?: string;
 }
 type DateCellValue = string;
+export declare const DateCellName = "DateCell";
 declare function DateCell<Data>(props: ExtendedCellProps<Data, DateCellValue>): JSX.Element;
 export default DateCell;

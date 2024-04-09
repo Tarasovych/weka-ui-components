@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { DateTime } from 'luxon'
 import { Close } from '../../../../../svgs'
-import { FILTERBOXES, TIME_FORMATS } from '../../../../../consts'
+import { EMPTY_STRING, FILTERBOXES, TIME_FORMATS } from '../../../../../consts'
 import utils from '../../../../../utils'
 import { ExtendedColumn } from '../../../types'
 import { tableUtils } from '../../../tableUtils'
@@ -72,8 +72,10 @@ function FilterBox<Data, Value>(props: FilterBoxProps<Data, Value>) {
   }, [customDateFormat, hasCustomDateFormat, filterValue])
 
   const formattedName = useMemo(() => {
-    if (columnTitle.toUpperCase().replace(/\s/g, '') in FILTERBOXES) {
-      return FILTERBOXES[`${columnTitle.toUpperCase().replace(/\s/g, '')}`]
+    if (columnTitle.toUpperCase().replace(/\s/g, EMPTY_STRING) in FILTERBOXES) {
+      return FILTERBOXES[
+        `${columnTitle.toUpperCase().replace(/\s/g, EMPTY_STRING)}`
+      ]
     }
     return columnTitle.split('_').join(' ')
   }, [columnTitle])
