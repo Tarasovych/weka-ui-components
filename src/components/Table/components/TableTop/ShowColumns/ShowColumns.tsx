@@ -60,7 +60,7 @@ function ShowColumns<Data>(props: ShowColumnsProps<Data>) {
                           <div className='show-columns-line'>
                             <Checkbox
                               checked={column.getIsVisible()}
-                              onClick={column.getToggleVisibilityHandler()}
+                              onChange={column.getToggleVisibilityHandler()}
                               disabled={
                                 column.getIsVisible() && visibleColumns <= 2
                               }

@@ -35,6 +35,7 @@ type CellDef<TData, TValue, Type extends string | undefined, Options = undefined
 declare module '@tanstack/react-table' {
     interface SortingFns {
         stringSort: SortingFn<unknown>;
+        numberSort: SortingFn<unknown>;
     }
     interface ColumnMeta<TData, TValue> {
         defaultHidden?: boolean;

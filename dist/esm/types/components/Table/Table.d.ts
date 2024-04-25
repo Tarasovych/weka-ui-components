@@ -45,7 +45,7 @@ interface TableProps<Data, Value> {
     hasResizableColumns?: boolean;
     hasEmptyActionsCell?: boolean;
     collapseRowsOnLeavingPage?: boolean;
-    onSortingChange?: (sort: {
+    onSortChanged?: (sort: {
         id: string;
         desc?: boolean;
     }) => void;

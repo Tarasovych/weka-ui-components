@@ -31,8 +31,7 @@ function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
 
   const value = customValue !== undefined ? customValue : cell.getValue()
 
-  const { showTotalCountOnly, isLink, getUrl, openInNewTab } =
-    cellDef?.options ?? {}
+  const { showTotalCountOnly, getUrl, openInNewTab } = cellDef?.options ?? {}
 
   const upBlocks = value.filter(
     ({ status }) =>
@@ -47,7 +46,7 @@ function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
       <span
         className={clsx({
           'table-count-cell': true,
-          'table-count-cell-is-link': isLink
+          'table-count-cell-is-link': getUrl
         })}
       >
         {showTotalCountOnly ?? !value.length
@@ -67,7 +66,7 @@ function BlocksCell<Data>(props: ExtendedCellProps<Data, BlocksCellValue>) {
     </div>
   )
 
-  return isLink && getUrl ? (
+  return getUrl ? (
     <Link
       to={getUrl(cell.row.original)}
       {...(openInNewTab && {

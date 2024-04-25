@@ -10,6 +10,7 @@ export declare const TABLE_FILTERS_MAP: {
     readonly select: {
         readonly component: typeof SelectFilter;
         readonly parser: (rawValue: string[] | Record<string, string[]>) => string | null;
+        readonly filterFn: "equalsString";
     };
     readonly date: {
         readonly component: typeof DateFilter;
@@ -25,6 +26,7 @@ export declare const TABLE_FILTERS_MAP: {
     readonly text: {
         readonly component: typeof TextFilter;
         readonly parser: (rawValue: string[] | Record<string, string[]>) => string | null;
+        readonly filterFn: "includesString";
     };
     readonly severity: {
         readonly component: typeof SeverityFilter;

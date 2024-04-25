@@ -90,6 +90,7 @@ type CellDef<
 declare module '@tanstack/react-table' {
   interface SortingFns {
     stringSort: SortingFn<unknown>
+    numberSort: SortingFn<unknown>
   }
   interface ColumnMeta<TData, TValue> {
     defaultHidden?: boolean

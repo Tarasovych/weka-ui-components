@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
-import { ExtendedRow, ExtendedTable } from '../../types'
+import React from 'react'
+import { ExtendedTable } from '../../types'
 import Tooltip from '../../../Tooltip'
 import ShowColumns from './ShowColumns'
 import { IconButton } from '@mui/material'
@@ -53,15 +53,6 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
   const isAllRowsExpanded = table.getIsAllRowsExpanded()
   const allColumns = table.getAllColumns()
 
-  // TODO: check if it's needed
-  const cleanFilters = useMemo(
-    () =>
-      columnFilters.filter(({ id }) =>
-        allColumns.find((column) => id === column.id)
-      ),
-    [allColumns, columnFilters]
-  )
-
   return (
     <div className='table-top'>
       <div className='table-top-controls'>
@@ -77,7 +68,7 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
             <Tooltip data={isAllRowsExpanded ? 'Collapse all' : 'Expand all'}>
               <IconButton
                 onClick={() => {
-                  table.getToggleAllRowsExpandedHandler()
+                  table.toggleAllRowsExpanded()
                   toggleAllRowsExpanding()
                 }}
               >
@@ -116,7 +107,7 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
           </span>
         )}
       </div>
-      {!Utils.isEmpty(cleanFilters) && (
+      {!Utils.isEmpty(columnFilters) && (
         <div className='table-filters'>
           {allColumns.map(
             (column) =>

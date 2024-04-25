@@ -601,6 +601,7 @@ declare const TABLE_FILTERS_MAP: {
     readonly select: {
         readonly component: typeof SelectFilter;
         readonly parser: (rawValue: string[] | Record<string, string[]>) => string | null;
+        readonly filterFn: "equalsString";
     };
     readonly date: {
         readonly component: typeof DateFilter;
@@ -616,6 +617,7 @@ declare const TABLE_FILTERS_MAP: {
     readonly text: {
         readonly component: typeof TextFilter;
         readonly parser: (rawValue: string[] | Record<string, string[]>) => string | null;
+        readonly filterFn: "includesString";
     };
     readonly severity: {
         readonly component: typeof SeverityFilter;
@@ -698,6 +700,7 @@ type CellDef<TData, TValue, Type extends string | undefined, Options = undefined
 declare module '@tanstack/react-table' {
     interface SortingFns {
         stringSort: SortingFn<unknown>;
+        numberSort: SortingFn<unknown>;
     }
     interface ColumnMeta<TData, TValue> {
         defaultHidden?: boolean;
@@ -776,7 +779,7 @@ interface TableProps<Data, Value> {
     hasResizableColumns?: boolean;
     hasEmptyActionsCell?: boolean;
     collapseRowsOnLeavingPage?: boolean;
-    onSortingChange?: (sort: {
+    onSortChanged?: (sort: {
         id: string;
         desc?: boolean;
     }) => void;

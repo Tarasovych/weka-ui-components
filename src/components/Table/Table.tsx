@@ -1,4 +1,10 @@
-import React, { ReactNode, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import React, {
+  ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef
+} from 'react'
 import {
   COLUMN_RESIZING_LISTENER,
   EMPTY_STRING,
@@ -92,7 +98,7 @@ interface TableProps<Data, Value> {
   hasResizableColumns?: boolean
   hasEmptyActionsCell?: boolean
   collapseRowsOnLeavingPage?: boolean
-  onSortingChange?: (sort: { id: string; desc?: boolean }) => void
+  onSortChanged?: (sort: { id: string; desc?: boolean }) => void
   manualSorting?: boolean
 }
 
@@ -126,7 +132,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     loading,
     onFiltersChanged,
     defaultDescendingSort = false,
-    onSortingChange,
+    onSortChanged,
     manualSorting,
     manualFilters,
     extraClasses,
@@ -263,8 +269,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     autoResetPage: false,
     paginateExpandedRows: false,
     getRowId,
-    ...(grouping && { getGroupedRowModel: getGroupedRowModel() }),
-    ...(onSortingChange && { onSortingChange }),
+    ...(grouping && { getGroupedRowModel: getGroupedRowModel() })
   })
 
   table.setOptions((prev) => ({
@@ -280,7 +285,8 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     pagination: { pageIndex },
     columnFilters,
     columnVisibility,
-    columnSizing
+    columnSizing,
+    sorting
   } = table.getState()
 
   const allColumns = table.getAllColumns()
@@ -288,6 +294,13 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
   const isAllRowsExpanded = table.getIsAllRowsExpanded()
 
   const rows = table.getRowModel().rows
+
+  const onSortChangedRef = useRef(onSortChanged)
+  onSortChangedRef.current = onSortChanged
+
+  useEffect(() => {
+    onSortChangedRef.current?.(sorting[0])
+  }, [sorting])
 
   useEffect(() => {
     updateExplicitlyRemovedFilters(columnFilters)

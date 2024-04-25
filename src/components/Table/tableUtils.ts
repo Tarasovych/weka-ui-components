@@ -94,6 +94,16 @@ export const customSortingFns = {
 
     const collator = Intl.Collator(undefined, { numeric: true })
     return collator.compare(a, b)
+  },
+  numberSort: <Data>(
+    rowA: ExtendedRow<Data>,
+    rowB: ExtendedRow<Data>,
+    columnId: string
+  ): number => {
+    const a = rowA.getValue(columnId) || 0
+    const b = rowB.getValue(columnId) || 0
+
+    return +a - +b
   }
 }
 

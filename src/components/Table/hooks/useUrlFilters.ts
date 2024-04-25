@@ -103,7 +103,8 @@ function useUrlFilters(props: {
           if (
             typeof innerVal !== 'string' &&
             typeof innerVal !== 'number' &&
-            typeof innerVal !== 'boolean'
+            typeof innerVal !== 'boolean' &&
+            typeof innerVal !== 'undefined'
           ) {
             throw new Error('Invalid filter value. Expected string or number.')
           }

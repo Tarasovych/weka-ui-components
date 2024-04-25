@@ -6,6 +6,7 @@ export declare const tableUtils: {
 };
 export declare const customSortingFns: {
     stringSort: <Data>(rowA: ExtendedRow<Data>, rowB: ExtendedRow<Data>, columnId: string) => number;
+    numberSort: <Data_1>(rowA: ExtendedRow<Data_1>, rowB: ExtendedRow<Data_1>, columnId: string) => number;
 };
 export declare const urlFilterParsers: {
     readonly string: (rawValue: Parameters<UrlFilterParser>[0]) => string | null;

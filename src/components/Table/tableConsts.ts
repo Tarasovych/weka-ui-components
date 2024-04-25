@@ -18,7 +18,8 @@ export const TABLE_FILTERS_MAP = {
   },
   select: {
     component: SelectFilter,
-    parser: urlFilterParsers.string
+    parser: urlFilterParsers.string,
+    filterFn: 'equalsString'
   },
   date: {
     component: DateFilter,
@@ -27,7 +28,8 @@ export const TABLE_FILTERS_MAP = {
   },
   text: {
     component: TextFilter,
-    parser: urlFilterParsers.string
+    parser: urlFilterParsers.string,
+    filterFn: 'includesString'
   },
   severity: {
     component: SeverityFilter,

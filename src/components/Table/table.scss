@@ -3,6 +3,7 @@
   flex-direction: column;
   flex: 1;
   border: 1px solid var(--ironhide-key);
+  overflow-x: hidden;
 
   .table-top {
     width: 100%;
@@ -369,19 +370,18 @@
     color: var(--ironhide-s3);
   }
 
-  .resizer {
+  .column-resizer {
     position: absolute;
     right: 0;
     top: 0;
     height: 100%;
-    width: 5px;
     background: rgba(0, 0, 0, 0.5);
     cursor: col-resize;
     user-select: none;
     touch-action: none;
   }
   
-  .resizer.isResizing {
+  .column-resizer.isResizing {
     background: blue;
     opacity: 1;
   }
