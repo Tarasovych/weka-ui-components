@@ -251,7 +251,7 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
     defaultColumn: {
       cell: DefaultCell,
       size: 100,
-      sortingFn: 'basic'
+      sortingFn: 'stringSort'
     },
     sortingFns: customSortingFns,
     getCoreRowModel: getCoreRowModel(),
@@ -408,7 +408,6 @@ function Table<Data, Value>(props: TableProps<Data, Value>) {
           title={title}
           itemsAmount={itemsAmount}
           maxRows={maxRows}
-          data={data}
           table={table}
           canExpandAll={canExpandAll}
           isExpandable={isExpandable}

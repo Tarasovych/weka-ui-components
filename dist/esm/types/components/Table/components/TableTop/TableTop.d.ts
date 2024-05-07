@@ -5,7 +5,6 @@ interface TableTopProps<Data> {
     title?: string;
     itemsAmount?: number;
     maxRows?: number;
-    data: Data[];
     canExpandAll: boolean;
     isExpandable: boolean;
     tableActions: any;

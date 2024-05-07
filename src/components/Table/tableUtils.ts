@@ -27,10 +27,6 @@ export const customSortingFns = {
     let a = rowA.getValue(columnId) || EMPTY_STRING
     let b = rowB.getValue(columnId) || EMPTY_STRING
 
-    if (typeof a !== 'string' || typeof b !== 'string') {
-      return a > b ? 1 : -1
-    }
-
     if (utils.isNumber(a) && utils.isNumber(b)) {
       if (utils.isEmpty(a)) {
         return 1

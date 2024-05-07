@@ -19,7 +19,6 @@ interface TableTopProps<Data> {
   title?: string
   itemsAmount?: number
   maxRows?: number
-  data: Data[]
   canExpandAll: boolean
   isExpandable: boolean
   tableActions: any
@@ -36,7 +35,6 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
     title,
     itemsAmount,
     maxRows,
-    data,
     table,
     canExpandAll,
     isExpandable,
@@ -58,7 +56,7 @@ export function TableTop<Data>(props: TableTopProps<Data>) {
       <div className='table-top-controls'>
         <span className='heading-4'>{title}</span>
         <span className='sub-title bold'>
-          {`${itemsAmount || data.length} ${
+          {`${itemsAmount || table.getFilteredRowModel().rows.length} ${
             maxRows ? `(max ${maxRows})` : EMPTY_STRING
           }`}
         </span>
